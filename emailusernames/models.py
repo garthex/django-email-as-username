@@ -11,11 +11,13 @@ from emailusernames.utils import _email_to_username
 # and there's really no other way to get around it.
 def user_init_patch(self, *args, **kwargs):
     super(User, self).__init__(*args, **kwargs)
+    self.username_hash = self.username
     self.username = self.email
 
 
 def user_save_patch(self, *args, **kwargs):
     self.username = _email_to_username(self.email)
+    self.username_hash = self.username
     super(User, self).save(*args, **kwargs)
     self.username = self.email
 
